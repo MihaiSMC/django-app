@@ -132,9 +132,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'https://cowcow.io',
-    'https://cowcow-website-git-homepage-redesign-cowcow.vercel.app',
-    'https://wwww.cowcow.io',
-]
+#CORS_ALLOWED_ORIGINS = [
+#    'http://localhost:3000',
+#    'https://cowcow.io',
+#    'https://cowcow-website-git-homepage-redesign-cowcow.vercel.app',
+#    'cowcow.io',
+#]
+
+CORS_ALLOW_ALL_ORIGINS = True
