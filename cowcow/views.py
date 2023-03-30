@@ -35,15 +35,24 @@ def get_daos(metadata):
     
     if clothes == 'Space Suit':
         daos.append('space')
-    elif hat == 'Golf Polo':
+    elif clothes == 'Golf Polo':
         daos.append('golf')
-    
+    elif clothes == 'Waiter Suit' or clothes == 'Chef Tunic':
+        daos.append('tavern')
+    elif clothes == 'Rockstar Jacket':
+        daos.append('rockstar')
+
     if hat == 'Milk Bottle':
-        daos.append('milk bottle')
+        daos.append('milk_bottle')
     elif hat == 'Sombrero':
         daos.append('sombrero')
     elif hat == 'Clown Hat':
         daos.append('joker')
+    elif hat == '23 Ear Tag':
+        daos.append('23')
+    
+    if fur == 'Robot' or fur == 'Manifesto' or fur == 'Gold':
+        daos.append('triumvirate')
     
     if eyewear == 'Aviator Sunglasses' or clothes == 'Aviator Jacket':
         daos.append('aviator')
