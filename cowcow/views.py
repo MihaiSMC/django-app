@@ -3,6 +3,8 @@ from django.views import View
 import requests
 import json
 from django.conf import settings
+import datetime
+
 
 def get_image_url(name):
     index = name[name.find("#") + 1:]
@@ -131,3 +133,34 @@ class ListSizeView(View):
 
         response_data = {'size': len(nft_list)}
         return JsonResponse(response_data)
+    
+class UnbondView(View):
+    def get(self, request):
+        global_dict = {}
+
+        url = "https://api.multiversx.com/accounts/erd1qqqqqqqqqqqqqpgqqgzzsl0re9e3u0t3mhv3jwg6zu63zssd7yqs3uu9jk/transactions?function=unstake&size=10000&order=asc"
+
+        payload = {}
+        headers = {
+        'Cookie': '__cflb=02DiuJNkBBX5Wn6Z6yZNTBmZLC2j5TpzLaVwHUct2FcSG'
+        }
+
+        response = requests.request("GET", url, headers=headers, data=payload)
+        my_json = json.loads(response.text)
+
+        for el in my_json:
+            dt = datetime.datetime.fromtimestamp(el['timestamp']) + datetime.timedelta(days=7)
+            month = dt.strftime("%B")
+            current_date = f"{dt.day}-{month}"
+
+            if current_date not in global_dict:
+                global_dict[current_date] = [el['sender']]
+            else:
+                global_dict[current_date].append(el['sender'])
+        
+        final_dict = {}
+        
+        for key in global_dict:
+            final_dict[key] = len(global_dict[key])
+
+        return JsonResponse(final_dict)
