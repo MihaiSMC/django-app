@@ -11,6 +11,12 @@ def get_image_url(name):
 
     return f'https://coffee-dear-mongoose-513.mypinata.cloud/ipfs/QmP8XL56WtNnRvWUXHh1W8MLAjekMyY5JtMw5FC72Lf3bK/{index}.png'
 
+def int_to_hex(number):
+    hex_nr = hex(number)[2:]
+    if len(hex_nr) % 2 != 0:
+        hex_nr = "0" + hex_nr
+    return hex_nr
+
 def get_daos(metadata):
     clothes = ''
     eyewear = ''
@@ -81,6 +87,7 @@ def add_nfts_from_wallet(address):
     
     return response
 
+'''
 def add_staked_nfts(address):
     collection_dict = settings.MY_DICT
     temp_list = []
@@ -106,7 +113,34 @@ def add_staked_nfts(address):
         temp_list.append(temp_value)
 
     return temp_list
+'''
 
+def add_staked_nfts(address):
+    collection_dict = settings.MY_DICT
+    temp_list = []
+
+    url = f"https://cowcow-api.vercel.app/staking-data/{address}"
+    payload={}
+    headers = {}
+    response = requests.request("GET", url, headers=headers, data=payload)
+    response = json.loads(response.text)
+
+    stakedIdentifiers = response['staked_nfts']
+    for value in stakedIdentifiers:
+        temp_value = collection_dict[f"COW-cd463d-{int_to_hex(int(value))}"]
+        temp_value['staked'] = 'yes'
+        temp_value['daos'] = get_daos(temp_value['metadata'])
+        temp_list.append(temp_value)
+    
+    unboundIdentifiers = response['unstaked_nfts']
+    for value in unboundIdentifiers:
+        temp_value = collection_dict[f"COW-cd463d-{int_to_hex(int(value))}"]
+        temp_value['staked'] = 'yes'
+        temp_value['daos'] = get_daos(temp_value['metadata'])
+        temp_list.append(temp_value)
+    
+    return temp_list
+        
 class MyListView(View):
     def get(self, request, address):
         wallet_nfts = add_nfts_from_wallet(address)
