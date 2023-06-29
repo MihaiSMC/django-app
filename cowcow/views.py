@@ -4,6 +4,7 @@ import requests
 import json
 from django.conf import settings
 import datetime
+from django.http import HttpResponse
 
 
 def get_image_url(name):
@@ -198,3 +199,19 @@ class UnbondView(View):
             final_dict[key] = len(global_dict[key])
 
         return JsonResponse(final_dict)
+
+class CirculatingSupplyView(View):
+    def get(self, request):
+        print('da')
+        url = "https://api.multiversx.com/tokens/MOOVE-875539/supply"
+
+        payload = {}
+        headers = {
+        'Cookie': '__cflb=02DiuJNkBBX5Wn6Z6yZNTBmZLC2j5TpzLaVwHUct2FcSG'
+        }
+
+        response = requests.request("GET", url, headers=headers, data=payload)
+        my_json = json.loads(response.text)
+        print(my_json['circulatingSupply'])
+
+        return HttpResponse(my_json['circulatingSupply'])
